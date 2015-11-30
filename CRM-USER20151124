@@ -1,0 +1,94 @@
+主机：10.10.1.103  日期：2015-11-24
+CRM-USER性能分析报告：
+基本统计
+METHOD：updateOld91UserRecharge,MED: 8,AVG：10.6MS, TOTAL：20338
+DIS	1901	18	0	0	0	0	0	0	0	0	0	
+METHOD：firstLoginNewGame,MED: 8,AVG：9.7MS, TOTAL：18933
+DIS	1935	13	0	0	0	0	0	0	0	0	0	
+METHOD：batchQueryUserInfo,MED: 1049,AVG：929.0MS, TOTAL：1858
+DIS	0	0	0	0	1	1	0	0	0	0	0	
+METHOD：completeUserInfo,MED: 19,AVG：18.3MS, TOTAL：55
+DIS	3	0	0	0	0	0	0	0	0	0	0	
+METHOD：getUserRecharge,MED: 12,AVG：12.1MS, TOTAL：422
+DIS	35	0	0	0	0	0	0	0	0	0	0	
+METHOD：updateUserScore,MED: 0,AVG：0.0MS, TOTAL：0
+DIS	25	0	0	0	0	0	0	0	0	0	0	
+METHOD：getUserPlayedGameList,MED: 6,AVG：5.5MS, TOTAL：11
+DIS	2	0	0	0	0	0	0	0	0	0	0	
+METHOD：getUserInfo,MED: 61,AVG：68.5MS, TOTAL：78218
+DIS	1107	34	1	0	0	0	0	0	0	0	0	
+METHOD：login,MED: 29,AVG：34.3MS, TOTAL：66877
+DIS	1912	36	2	0	0	0	0	0	0	0	0	
+METHOD：getUserVipAndScore,MED: 23,AVG：26.4MS, TOTAL：66518
+DIS	2486	31	0	0	0	0	0	0	0	0	0	
+METHOD：updateUserPlayedGame,MED: 0,AVG：0.0MS, TOTAL：0
+DIS	6	0	0	0	0	0	0	0	0	0	0	
+服务器调用情况
+请求来源：10.10.0.95----updateOld91UserRecharge，调用次数：392
+请求来源：10.10.1.71----getUserRecharge，调用次数：9
+请求来源：10.10.1.75----getUserInfo，调用次数：67
+请求来源：10.10.0.93----login，调用次数：382
+请求来源：10.10.1.70----getUserInfo，调用次数：5
+请求来源：10.10.1.104----getUserInfo，调用次数：58
+请求来源：10.10.0.93----getUserInfo，调用次数：87
+请求来源：10.10.1.71----updateUserScore，调用次数：4
+请求来源：10.10.0.94----updateOld91UserRecharge，调用次数：384
+请求来源：10.10.0.95----getUserInfo，调用次数：94
+请求来源：10.10.1.78----login，调用次数：399
+请求来源：10.10.1.72----getUserInfo，调用次数：13
+请求来源：10.10.1.71----updateUserPlayedGame，调用次数：1
+请求来源：111.13.46.116----getUserInfo，调用次数：35
+请求来源：10.10.1.70----getUserPlayedGameList，调用次数：2
+请求来源：10.10.0.95----login，调用次数：378
+请求来源：10.10.0.95----firstLoginNewGame，调用次数：394
+请求来源：10.10.1.72----updateUserPlayedGame，调用次数：4
+请求来源：10.10.1.71----login，调用次数：10
+请求来源：10.10.0.94----login，调用次数：394
+请求来源：10.10.0.94----firstLoginNewGame，调用次数：398
+请求来源：10.10.1.74----getUserInfo，调用次数：67
+请求来源：10.10.1.70----batchQueryUserInfo，调用次数：1
+请求来源：10.10.1.77----updateOld91UserRecharge，调用次数：374
+请求来源：10.10.1.72----login，调用次数：12
+请求来源：10.10.0.107----updateOld91UserRecharge，调用次数：1
+请求来源：10.10.1.77----login，调用次数：373
+请求来源：10.10.1.74----getUserVipAndScore，调用次数：57
+请求来源：10.10.1.69----getUserInfo，调用次数：5
+请求来源：10.10.0.97----updateOld91UserRecharge，调用次数：1
+请求来源：10.10.1.70----login，调用次数：2
+请求来源：10.10.1.72----getUserRecharge，调用次数：21
+请求来源：10.10.0.106----updateOld91UserRecharge，调用次数：1
+请求来源：10.10.0.105----updateOld91UserRecharge，调用次数：1
+请求来源：10.10.0.93----firstLoginNewGame，调用次数：397
+请求来源：10.10.1.70----completeUserInfo，调用次数：1
+请求来源：10.10.0.93----getUserVipAndScore，调用次数：463
+请求来源：111.13.46.115----getUserInfo，调用次数：62
+请求来源：10.10.1.72----batchQueryUserInfo，调用次数：1
+请求来源：10.10.1.71----completeUserInfo，调用次数：1
+请求来源：10.10.1.77----firstLoginNewGame，调用次数：357
+请求来源：10.10.1.69----getUserVipAndScore，调用次数：49
+请求来源：10.10.0.106----getUserInfo，调用次数：1
+请求来源：10.10.1.71----getUserInfo，调用次数：13
+请求来源：10.10.0.94----getUserInfo，调用次数：105
+请求来源：10.10.1.70----updateUserPlayedGame，调用次数：1
+请求来源：10.10.1.76----getUserInfo，调用次数：63
+请求来源：10.10.1.70----getUserRecharge，调用次数：5
+请求来源：10.10.1.70----updateUserScore，调用次数：6
+请求来源：10.10.1.72----updateUserScore，调用次数：15
+请求来源：10.10.1.78----updateOld91UserRecharge，调用次数：384
+请求来源：10.10.0.94----getUserVipAndScore，调用次数：479
+请求来源：10.10.1.78----getUserVipAndScore，调用次数：500
+请求来源：111.13.46.118----getUserInfo，调用次数：61
+请求来源：10.10.0.96----getUserInfo，调用次数：1
+请求来源：10.10.1.77----getUserInfo，调用次数：88
+请求来源：111.13.46.117----getUserInfo，调用次数：53
+请求来源：10.10.0.98----updateOld91UserRecharge，调用次数：1
+请求来源：10.10.1.77----getUserVipAndScore，调用次数：455
+请求来源：10.10.1.78----firstLoginNewGame，调用次数：403
+请求来源：10.10.0.97----getUserInfo，调用次数：1
+请求来源：10.10.1.103----getUserInfo，调用次数：58
+请求来源：10.10.0.95----getUserVipAndScore，调用次数：513
+请求来源：10.10.0.93----updateOld91UserRecharge，调用次数：380
+请求来源：111.13.46.123----getUserInfo，调用次数：105
+请求来源：10.10.1.78----getUserInfo，调用次数：100
+请求来源：10.10.1.72----completeUserInfo，调用次数：1
+

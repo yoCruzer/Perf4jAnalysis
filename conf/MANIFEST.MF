@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: . Perf4JAnalysis_lib/gson-2.2.4.jar Perf4JAnalysis_lib/activation.jar Perf4JAnalysis_lib/mail.jar Perf4JAnalysis_lib/spring-beans-3.2.1.RELEASE.jar Perf4JAnalysis_lib/spring-context-3.2.1.RELEASE.jar Perf4JAnalysis_lib/spring-context-support-3.2.1.RELEASE.jar Perf4JAnalysis_lib/spring-core-3.2.1.RELEASE.jar
+Main-Class: com.baidu.perf.main.SendEmail
+
