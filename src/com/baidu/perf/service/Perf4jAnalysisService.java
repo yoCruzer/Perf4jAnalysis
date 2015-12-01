@@ -74,10 +74,9 @@ public class Perf4jAnalysisService implements Perf4jService {
         Integer count = Integer.valueOf(times);
 
         String tagName = null;
-        String source_ip = null;
         if(tag.indexOf('-') > 0){
         	tagName = tag.substring(tag.lastIndexOf('-') + 1, tag.length());
-        	source_ip = tag.substring(0, tag.indexOf('-'));
+        	tag.substring(0, tag.indexOf('-'));
         	return null;
         }else{
         	tagName = tag;

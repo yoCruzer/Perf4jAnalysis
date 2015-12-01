@@ -9,9 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.baidu.perf.service.Perf4jAnalysisService;
 import com.baidu.perf.service.Perf4jDetailAnalysisService;
-import com.baidu.perf.service.Perf4jService;
 import com.baidu.perf.utils.FileIOUtil;
 import com.baidu.perf.utils.NumberUtil;
 import com.baidu.perf.utils.TimeUtil;
@@ -27,7 +25,7 @@ public class PerfManClass {
      * @param args
      */
     public static void main(String[] args) {
-    	String serviceName = "CONF_PATH_TEST";//args[0];
+    	String serviceName = args[0];
     	List<String> confList = new LinkedList<String>();
 		try {
 			confList = FileIOUtil.getFileContextBIO((String)PerfManClass.class.getField(serviceName).get(PerfManClass.class), "utf-8");
@@ -48,7 +46,6 @@ public class PerfManClass {
             if (null == conf || conf.length != 2) {
                 continue;
             }
-
             confMap.put(conf[0].trim(), conf[1].trim());
         }
         Gson gson = new Gson();
@@ -65,19 +62,16 @@ public class PerfManClass {
         	System.out.println(serverIp);
         	List<String> resultList = new ArrayList<String>();
 	        String perfPathDetail = confParam.getPerf_path() + confParam.getDetail_name() + yesterday + "." + serverIp;
-	        Perf4jAnalysisService dService = new Perf4jAnalysisService(confParam.getPerf_logger(), confParam.getIp_format(), confParam.getPerf_name_format());
-	        List<String> detailResult = FileIOUtil.getPerf4jStatisAnalysisNIO(perfPathDetail, size, confParam.getCharset(), dService);
+	        Perf4jDetailAnalysisService dService = new Perf4jDetailAnalysisService(confParam.getPerf_logger(), confParam.getIp_format(), confParam.getDetail_name_format());
+	        Map<String, List<String>> detailResult = FileIOUtil.getPerf4jDetailAnalysisNIO(perfPathDetail, size, confParam.getCharset(), dService);
 	        
-	        //	        if (null != detailResult) {
-//	        	resultList.add("主机：" + serverIp + "  日期：" + yesterday + "\n");
-//		        resultList.add(confParam.getProject_name() + "性能分析报告：" + "\n");
-//	        	resultList.add("基本统计\n");
-//	            resultList.addAll(detailResult.get("sta"));
-////	            resultList.add("服务器调用情况\n");
-////	            resultList.addAll(detailResult.get("ip"));
-//	        }	        
-	        resultList.addAll(detailResult);
-	        String outputName = confParam.getProject_name() + yesterdayNoSplit+serverIp+".txt";
+	        if (null != detailResult) {
+	        	resultList.add("主机：" + serverIp + "  日期：" + yesterday + "\n");
+		        resultList.add(confParam.getProject_name() + "性能分析报告：" + "\n");
+	        	resultList.add("基本统计\n");
+	            resultList.addAll(detailResult.get("sta"));
+	        }	        
+	        String outputName = confParam.getProject_name() + yesterdayNoSplit + ".txt";
 	        FileIOUtil.writeFileSimple(confParam.getOutput_file(), outputName, confParam.getCharset(), resultList);
         }
         

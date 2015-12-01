@@ -17,11 +17,13 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.baidu.perf.service.Perf4jAnalysisService;
 import com.baidu.perf.service.Perf4jDetailAnalysisService;
@@ -39,7 +41,7 @@ import com.baidu.perf.service.Perf4jService;
 @SuppressWarnings("unused")
 public class FileIOUtil {
 
-	private static final int TIME_LEVEL = 11;
+	private static final int TIME_LEVEL = 10;
     /**
      * nio方式统计文件行数，适合处理大文件，且结果比bio方式更精准
      *
@@ -298,58 +300,57 @@ public class FileIOUtil {
             // 组装输出结果字符串
             String dataFormater = service.getLoggerFormat();
             List<String> propertyList = service.getPropertyList();
+            //sort by list length
+            Map<Integer, Map<String, List<Integer>>> sortedMap = new TreeMap<Integer, Map<String, List<Integer>>>(new Comparator<Integer>(){     
+                public int compare(Integer a,Integer b){  
+                    return b-a;           
+                }});
             for (String key : dataMap.keySet()) {
-                List<Integer> lineMap = dataMap.get(key);
-                int total = 0;
-                Collections.sort(lineMap);
-                int medium = lineMap.get(lineMap.size()/2);
-                int[] datas = new int[TIME_LEVEL+1];
-                for(Integer time : lineMap){
-                	total += time;
-                	int level = time/200;
-                	if(level >= TIME_LEVEL){
-                		level = TIME_LEVEL;
-                	}
-                	datas[level] += 1;
-                }
-                float avg = total/Float.valueOf(lineMap.size());
-                Object[] statisDatas = new Object[4];
-                statisDatas[0] = key;
-                statisDatas[1] = medium;
-                statisDatas[2] = avg;
-                statisDatas[3] = lineMap.size();
-                String dataStatis = String.format(dataFormater, statisDatas) + "\n";
-                staticList.add(dataStatis);
-                StringBuilder sb = new StringBuilder();
-                sb.append("DIS").append("\t");
-                for(Integer v:datas){
-                	sb.append(v).append("\t");
-                }
-                String dataDistri = sb.toString() + "\n";
-                staticList.add(dataDistri);
+            	List<Integer> tempList = dataMap.get(key);
+            	if(sortedMap.containsKey((tempList).size())){
+            		Map<String, List<Integer>> map = sortedMap.get(tempList.size());
+            		map.put(key, dataMap.get(key));
+            	}else{
+            		Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+            		map.put(key, dataMap.get(key));
+            		sortedMap.put(tempList.size(), map);
+            	}
             }
-            
-            //String ipFormater = service.getIpFormat();
-            //Map<String, List<String>> ipTagMap = new HashMap<String, List<String>>();
-//            for(Entry<String, Integer> entity : ipMap.entrySet()){
-//            	Object[] datas = new Object[2];
-//            	String ipSource = entity.getKey().substring(0, entity.getKey().indexOf("-"));
-//            	datas[0] = entity.getKey().substring(entity.getKey().lastIndexOf("-")+1, entity.getKey().length());
-//            	datas[1] = entity.getValue();
-//            	String data = "\t"+String.format(ipFormater, datas) + "\n";
-//            	if(ipTagMap.containsKey(ipSource)){
-//            		List<String> ipList = ipTagMap.get(ipSource);
-//            		ipList.add(data);
-//            	}else{
-//            		List<String> ipList = new LinkedList<String>();
-//            		ipList.add(data);
-//            		ipTagMap.put(ipSource, ipList);
-//            	}
-//            }
-//            for(Entry<String, List<String>> entity: ipTagMap.entrySet()){
-//            	iptagList.add(entity.getKey()+"\n");
-//            	iptagList.addAll(entity.getValue());
-//            }
+            for(Entry<Integer, Map<String, List<Integer>>> entity: sortedMap.entrySet()){
+	            for (String key : entity.getValue().keySet()) {
+	                List<Integer> lineMap = dataMap.get(key);
+	                int total = 0;
+	                Collections.sort(lineMap);
+	                int medium = lineMap.get(lineMap.size()/2);
+	                int[] datas = new int[TIME_LEVEL+1];
+	                for(Integer time : lineMap){
+	                	total += time;
+	                	int level = time/200;
+	                	if(level >= TIME_LEVEL){
+	                		level = TIME_LEVEL;
+	                	}
+	                	datas[level] += 1;
+	                }
+	                float avg = total/Float.valueOf(lineMap.size());
+	                float timeOutRate = datas[TIME_LEVEL]/Float.valueOf(lineMap.size());
+	                Object[] statisDatas = new Object[6];
+	                statisDatas[0] = key;
+	                statisDatas[1] = medium;
+	                statisDatas[2] = avg;
+	                statisDatas[3] = lineMap.size();
+	                statisDatas[4] = datas[TIME_LEVEL];
+	                statisDatas[5] = timeOutRate;
+	                String dataStatis = String.format(dataFormater, statisDatas) + "\n";
+	                staticList.add(dataStatis);
+	                StringBuilder sb = new StringBuilder();
+	                sb.append("0.0s-0.2s	0.2s-0.4s	0.4s-0.6s	0.6s-0.8s	0.8s-1.0s	1.0s-1.2s	1.2s-1.4s	1.4s-1.6s	1.6s-1.8s	1.8s-2.0s	>2s\n");
+	                for(Integer v:datas){
+	                	sb.append(v).append("\t");
+	                }
+	                String dataDistri = sb.toString() + "\n";
+	                staticList.add(dataDistri);
+	            }
+            }
             channel.close();
             resultMap.put("sta", staticList);
             resultMap.put("ip", iptagList);
@@ -394,7 +395,6 @@ public class FileIOUtil {
             while ((line = reader.readLine()) != null) {
                 relustList.add(line);
             }
-
             reader.close();
             return relustList;
         } catch (FileNotFoundException ex) {
@@ -433,22 +433,5 @@ public class FileIOUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
-        // FileIOUtil.getFileLinesBIO("D:\\CRT downloads\\standalone_perf4j.log.2015-10-11");
-        // FileIOUtil.getFileLinesNIO("D:\\CRT downloads\\standalone_app.log.2015101100", 1024 * 512);
-        // FileIOUtil.getFileContextNIO("D:\\CRT downloads\\standalone_app.log.2015101100", 1024 * 512, "utf-8");
-        // FileIOUtil.getFileContextBIO("D:\\CRT downloads\\standalone_perf4j.log.2015-10-11");
-
-        List<String> aaa = new ArrayList<String>();
-        aaa.add("12131341\n");
-        aaa.add("sdafafaf\ndadwada\n");
-        writeFileSimple("C:\\Users\\maolei\\Desktop\\Perf4jAnalysis\\", "abc.txt", "UTF-8", aaa);
     }
 }

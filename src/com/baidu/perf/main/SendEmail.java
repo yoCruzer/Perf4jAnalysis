@@ -2,8 +2,9 @@ package com.baidu.perf.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -168,6 +169,10 @@ public class SendEmail {
 	private static final String ONLINE_PATH = "conf/sendEmail.conf";		
 	
 	public static void main(String[] args) {
+//		args = new String[3];
+//		args[0] = "aaa";
+//		args[1] = "true";
+//		args[2] = "test";
 		String subject = args[0];
 		boolean contentFlag = Boolean.valueOf(args[1]);
 		
@@ -207,13 +212,48 @@ public class SendEmail {
         StringBuilder content = new StringBuilder(args[2]);
         if(contentFlag){
         	for(String fileName : files){
-	        	File file = new File(fileName);
-	            BufferedReader reader = null;
+        		BufferedReader reader = null;
 	            try {
-	                reader = new BufferedReader(new FileReader(file));
+	            	FileInputStream file = new FileInputStream (fileName);
+	            	InputStreamReader isr = new InputStreamReader(file, "utf-8"); 
+	            	reader = new BufferedReader(isr);
 	                String tempString = null;
+	                boolean tableFlag = false;
+	                int tableLine = 1;
 	                while ((tempString = reader.readLine()) != null) {
-	                	content.append(tempString).append("<br>");
+	                	if(tempString.indexOf("CRM接口")>=0){
+	                		tableFlag = true;
+	                		tableLine = 1;
+	                		content.append(tempString).append("<br>");
+	                	}
+	                	else if(tableFlag){
+	                		if(tableLine == 1){
+		                		content.append("<table border=\"1\"><tr>");
+		                		String[] values = tempString.split("	");
+		                		for(String value: values){
+		                			content.append("<td>").append(value).append("</td>");
+		                		}
+		                		content.append("</tr>");
+		                		tableLine = 2;
+	                		}else{
+		                		content.append("<tr>");
+		                		String[] values = tempString.split("	");
+		                		for(int i=0; i<values.length-1;++i){
+		                			content.append("<td>").append(values[i]).append("</td>");
+		                		}
+		                		if(!values[values.length-1].equals("0")){
+		                			content.append("<td bgcolor=#FF2D2D>").append(values[values.length-1]).append("</td>");
+		                		}else{
+		                			content.append("<td>").append(values[values.length-1]).append("</td>");
+		                		}
+		                		content.append("</tr></table>");
+		                		tableFlag = false;
+		                		tableLine = 1;
+	                		}
+	                	}
+	                	else{
+	                		content.append(tempString).append("<br>");
+	                	}
 	                }
 	                reader.close();
 	            } catch (IOException e) {
