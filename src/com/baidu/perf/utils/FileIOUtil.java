@@ -270,6 +270,8 @@ public class FileIOUtil {
         List<String> iptagList = new ArrayList<String>();
         Map<String, List<Integer>> dataMap = new HashMap<String, List<Integer>>();
         Map<String, Integer> ipMap = new HashMap<String , Integer>();
+        float serviceTotalCount = 0f;
+        float serviceTotalTimeout = 0f;
         try {
             Charset charset = Charset.forName(cs);
             fis = new FileInputStream(new File(filename));
@@ -300,7 +302,7 @@ public class FileIOUtil {
             // 组装输出结果字符串
             String dataFormater = service.getLoggerFormat();
             List<String> propertyList = service.getPropertyList();
-            //sort by list length
+            //Sort by list length
             Map<Integer, Map<String, List<Integer>>> sortedMap = new TreeMap<Integer, Map<String, List<Integer>>>(new Comparator<Integer>(){     
                 public int compare(Integer a,Integer b){  
                     return b-a;           
@@ -317,6 +319,7 @@ public class FileIOUtil {
             	}
             }
             for(Entry<Integer, Map<String, List<Integer>>> entity: sortedMap.entrySet()){
+            	serviceTotalCount += entity.getKey();
 	            for (String key : entity.getValue().keySet()) {
 	                List<Integer> lineMap = dataMap.get(key);
 	                int total = 0;
@@ -347,10 +350,14 @@ public class FileIOUtil {
 	                for(Integer v:datas){
 	                	sb.append(v).append("\t");
 	                }
+	                serviceTotalTimeout += datas[TIME_LEVEL];
 	                String dataDistri = sb.toString() + "\n";
 	                staticList.add(dataDistri);
 	            }
             }
+            StringBuilder sb = new StringBuilder();
+            sb.append("总调用次数：").append(serviceTotalCount).append(",总超时次数：").append(serviceTotalTimeout).append(",服务超时率：").append(serviceTotalTimeout/serviceTotalCount).append("\n");
+            staticList.add(0, sb.toString());
             channel.close();
             resultMap.put("sta", staticList);
             resultMap.put("ip", iptagList);

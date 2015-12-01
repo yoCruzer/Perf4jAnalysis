@@ -68,7 +68,6 @@ public class PerfManClass {
 	        if (null != detailResult) {
 	        	resultList.add("主机：" + serverIp + "  日期：" + yesterday + "\n");
 		        resultList.add(confParam.getProject_name() + "性能分析报告：" + "\n");
-	        	resultList.add("基本统计\n");
 	            resultList.addAll(detailResult.get("sta"));
 	        }	        
 	        String outputName = confParam.getProject_name() + yesterdayNoSplit + ".txt";
